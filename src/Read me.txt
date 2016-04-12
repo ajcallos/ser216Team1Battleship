@@ -1,0 +1,9 @@
+Special Setup Instructions:
+
+To whom it may concern,
+
+Group 8 would like to inform you that in order to run the program properly, the JAR needs to be in the same file as the pictures because our group could not figure out a way for the program to point to itself for the pictures.
+
+Thank you,
+
+Group 8
