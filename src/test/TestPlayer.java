@@ -91,5 +91,19 @@ public class TestPlayer {
 		// Test vertical edge cases
 		assertTrue(!(player1.isRange(testShipTwo, 1, -1)));
 	}
+	
+	@Test
+	public void testValidPlace() {
+		
+		player1.setShipName("Aircraft Carrier");
+		
+		for (int i = 0; i < 10; i++) {
+			for (int j = 0; j < 10; j++) {
+				boolean valid = player1.validPlace(i, j);
+				
+				if ()
+			}
+		}
+	}
 
 }
