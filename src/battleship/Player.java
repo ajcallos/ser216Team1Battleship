@@ -99,7 +99,7 @@ public class Player {
 	// The main class
 	// ---------------------------------------------------------------
 	
-	Player(String currentPlayer) throws IOException {
+	public Player(String currentPlayer) throws IOException {
 		this.currentPlayer1 = currentPlayer;
 	}
 
