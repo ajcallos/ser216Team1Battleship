@@ -16,6 +16,12 @@ public class TestPlayer {
 	public static final String HORIZONTAL_DIRECTION = "Horizontal";
 	public static final String VERTICAL_DIRECTION = "Vertical";
 	
+	public static final String AIRCRAFT_CARRIER = "Aircraft Carrier";
+	public static final String BATTLESHIP = "Battleship";
+	public static final String SUBMARINE = "Submarine";
+	public static final String DESTROYER = "Destroyer";
+	public static final String PATROL_BOAT = "Patrol Boat";
+	
 	@Before
 	public void setUp() throws Exception {
 		player1 = new Player("player1");
