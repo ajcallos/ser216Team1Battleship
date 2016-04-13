@@ -36,16 +36,60 @@ public class TestPlayer {
 	public void testIsRange() {
 		Ship testShipOne = player1.new Ship("testShipOne", HORIZONTAL_DIRECTION, 5, 0, 0);
 		
+		// Test valid horizontal positions
 		assertTrue(player1.isRange(testShipOne, 0, 0));
 		assertTrue(player1.isRange(testShipOne, 1, 0));
 		assertTrue(player1.isRange(testShipOne, 2, 0));
 		assertTrue(player1.isRange(testShipOne, 3, 0));
 		assertTrue(player1.isRange(testShipOne, 4, 0));
+		
+		
+		// Test invalid horizontal positions
 		assertTrue(!(player1.isRange(testShipOne, 5, 0)));
-		assertTrue(!(player1.isRange(testShipOne,6, 0)));
+		assertTrue(!(player1.isRange(testShipOne, 0, 1)));
+		assertTrue(!(player1.isRange(testShipOne, 1, 1)));
+		assertTrue(!(player1.isRange(testShipOne, 2, 1)));
+		assertTrue(!(player1.isRange(testShipOne, 3, 1)));
+		assertTrue(!(player1.isRange(testShipOne, 4, 1)));
+		assertTrue(!(player1.isRange(testShipOne, 5, 1)));
+		assertTrue(!(player1.isRange(testShipOne, 0, -1)));
+		assertTrue(!(player1.isRange(testShipOne, 1, -1)));
+		assertTrue(!(player1.isRange(testShipOne, 2, -1)));
+		assertTrue(!(player1.isRange(testShipOne, 3, -1)));
+		assertTrue(!(player1.isRange(testShipOne, 4, -1)));
+		assertTrue(!(player1.isRange(testShipOne, 5, -1)));
 		
+		// Test horizontal edge cases
 		assertTrue(!(player1.isRange(testShipOne, -1, 0)));
+		assertTrue(!(player1.isRange(testShipOne, 0, -1)));
+		assertTrue(!(player1.isRange(testShipOne, -1, -1)));
 		
+		Ship testShipTwo = player1.new Ship("testShipTwo", VERTICAL_DIRECTION, 5, 1, 0);
+		
+		// Test valid vertical positions
+		assertTrue(player1.isRange(testShipTwo, 1, 0));
+		assertTrue(player1.isRange(testShipTwo, 1, 1));
+		assertTrue(player1.isRange(testShipTwo, 1, 2));
+		assertTrue(player1.isRange(testShipTwo, 1, 3));
+		assertTrue(player1.isRange(testShipTwo, 1, 4));
+		
+		// Test invalid vertical positions
+		assertTrue(!(player1.isRange(testShipTwo, 1, 5)));
+		assertTrue(!(player1.isRange(testShipTwo, 0, 0)));
+		assertTrue(!(player1.isRange(testShipTwo, 0, 1)));
+		assertTrue(!(player1.isRange(testShipTwo, 0, 2)));
+		assertTrue(!(player1.isRange(testShipTwo, 0, 3)));
+		assertTrue(!(player1.isRange(testShipTwo, 0, 4)));
+		assertTrue(!(player1.isRange(testShipTwo, 0, 5)));
+		assertTrue(!(player1.isRange(testShipTwo, 2, 0)));
+		assertTrue(!(player1.isRange(testShipTwo, 2, 1)));
+		assertTrue(!(player1.isRange(testShipTwo, 2, 2)));
+		assertTrue(!(player1.isRange(testShipTwo, 2, 3)));
+		assertTrue(!(player1.isRange(testShipTwo, 2, 4)));
+		assertTrue(!(player1.isRange(testShipTwo, 2, 5)));
+		
+		// Test vertical edge cases
+		assertTrue(!(player1.isRange(testShipTwo, 1, -1)));
 	}
 
 }
