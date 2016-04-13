@@ -1570,11 +1570,5 @@ public class Player {
 		}
 
 	}
-	
-	// FOR TESTING
-	
-	public void setShipName(String name) {
-		shipName = name;
-	}
 
 }
