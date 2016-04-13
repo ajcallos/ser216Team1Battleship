@@ -1396,15 +1396,15 @@ public class Player {
 		return false;
 
 	}
-
+	
 	// Classes-----------------------------------------------------------------
-
+	
 	// Holds the values for the ships
 	public class Ship {
 		String name, directionOfShip;
 		int x, y, size, hits;
 
-		Ship(String name, String directionOfShip, int size, int x, int y) {
+		public Ship(String name, String directionOfShip, int size, int x, int y) {
 			this.name = name;
 			this.directionOfShip = directionOfShip;
 			this.size = size;
