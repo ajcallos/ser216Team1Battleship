@@ -16,6 +16,12 @@ public class TestPlayer {
 	public static final String HORIZONTAL_DIRECTION = "Horizontal";
 	public static final String VERTICAL_DIRECTION = "Vertical";
 	
+	public static final String AIRCRAFT_CARRIER = "Aircraft Carrier";
+	public static final String BATTLESHIP = "Battleship";
+	public static final String SUBMARINE = "Submarine";
+	public static final String DESTROYER = "Destroyer";
+	public static final String PATROL_BOAT = "Patrol Boat";
+	
 	@Before
 	public void setUp() throws Exception {
 		player1 = new Player("player1");
@@ -95,15 +101,6 @@ public class TestPlayer {
 	@Test
 	public void testValidPlace() {
 		
-		player1.setShipName("Aircraft Carrier");
-		
-		for (int i = 0; i < 10; i++) {
-			for (int j = 0; j < 10; j++) {
-				boolean valid = player1.validPlace(i, j);
-				
-				if ()
-			}
-		}
 	}
 
 }
