@@ -7,7 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import battleship.Player;
-import battleship.Player.Ship;
+import battleship.Ship;
 
 public class TestPlayer {
 	Player player1;
@@ -34,7 +34,7 @@ public class TestPlayer {
 
 	@Test
 	public void testIsRange() {
-		Ship testShipOne = player1.new Ship("testShipOne", HORIZONTAL_DIRECTION, 5, 0, 0);
+		Ship testShipOne = new Ship("testShipOne", HORIZONTAL_DIRECTION, 5, 0, 0);
 		
 		// Test valid horizontal positions
 		assertTrue(player1.isRange(testShipOne, 0, 0));
@@ -64,7 +64,7 @@ public class TestPlayer {
 		assertTrue(!(player1.isRange(testShipOne, 0, -1)));
 		assertTrue(!(player1.isRange(testShipOne, -1, -1)));
 		
-		Ship testShipTwo = player1.new Ship("testShipTwo", VERTICAL_DIRECTION, 5, 1, 0);
+		Ship testShipTwo = new Ship("testShipTwo", VERTICAL_DIRECTION, 5, 1, 0);
 		
 		// Test valid vertical positions
 		assertTrue(player1.isRange(testShipTwo, 1, 0));
