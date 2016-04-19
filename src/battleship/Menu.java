@@ -60,7 +60,8 @@ public class Menu {
 		playButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					new SinglePlayerGame();
+					GameLogic game = new GameLogic();
+					game.startSinglePlayerGame();
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}

@@ -37,11 +37,11 @@ public class Player {
 	private static Component sunkFrame;
 	
 	// Player objects
-	Ship ac = new Ship();
-	Ship bs = new Ship();
-	Ship ds = new Ship();
-	Ship sb = new Ship();
-	Ship pb = new Ship();
+	Ship aircraftCarrier = new Ship();
+	Ship battleship = new Ship();
+	Ship destroyer = new Ship();
+	Ship submarine = new Ship();
+	Ship patrolBoat = new Ship();
 
 	// CPU values
 	private final static int[] BATTLESHIP_SIZES = new int[] { 5, 4, 3, 3, 2 };
@@ -126,61 +126,61 @@ public class Player {
 	public void removeOldShip() {
 		
 		if (shipName.equals("Aircraft Carrier")) {
-			if (ac.getDirectionOfShip().equals("Vertical")) {
+			if (aircraftCarrier.getDirectionOfShip().equals("Vertical")) {
 				for (int i = 0; i < 5; i++) {
-					board[ac.getX()][i + ac.getY()] = 0;
+					board[aircraftCarrier.getX()][i + aircraftCarrier.getY()] = 0;
 				}
 			} else {
 				for (int i = 0; i < 5; i++) {
-					board[i + ac.getX()][ac.getY()] = 0;
+					board[i + aircraftCarrier.getX()][aircraftCarrier.getY()] = 0;
 				}
 			}
 		}
 
 		if (shipName.equals("Battleship")) {
-			if (bs.getDirectionOfShip().equals("Vertical")) {
+			if (battleship.getDirectionOfShip().equals("Vertical")) {
 				for (int i = 0; i < 4; i++) {
-					board[bs.getX()][i + bs.getY()] = 0;
+					board[battleship.getX()][i + battleship.getY()] = 0;
 				}
 			} else {
 				for (int i = 0; i < 4; i++) {
-					board[i + bs.getX()][bs.getY()] = 0;
+					board[i + battleship.getX()][battleship.getY()] = 0;
 				}
 			}
 		}
 
 		if (shipName.equals("Submarine")) {
-			if (sb.getDirectionOfShip().equals("Vertical")) {
+			if (submarine.getDirectionOfShip().equals("Vertical")) {
 				for (int i = 0; i < 3; i++) {
-					board[sb.getX()][i + sb.getY()] = 0;
+					board[submarine.getX()][i + submarine.getY()] = 0;
 				}
 			} else {
 				for (int i = 0; i < 3; i++) {
-					board[i + sb.getX()][sb.getY()] = 0;
+					board[i + submarine.getX()][submarine.getY()] = 0;
 				}
 			}
 		}
 
 		if (shipName.equals("Destroyer")) {
-			if (ds.getDirectionOfShip().equals("Vertical")) {
+			if (destroyer.getDirectionOfShip().equals("Vertical")) {
 				for (int i = 0; i < 3; i++) {
-					board[ds.getX()][i + ds.getY()] = 0;
+					board[destroyer.getX()][i + destroyer.getY()] = 0;
 				}
 			} else {
 				for (int i = 0; i < 3; i++) {
-					board[i + ds.getX()][ds.getY()] = 0;
+					board[i + destroyer.getX()][destroyer.getY()] = 0;
 				}
 			}
 		}
 
 		if (shipName.equals("Patrol Boat")) {
-			if (pb.getDirectionOfShip().equals("Vertical")) {
+			if (patrolBoat.getDirectionOfShip().equals("Vertical")) {
 				for (int i = 0; i < 2; i++) {
-					board[pb.getX()][i + pb.getY()] = 0;
+					board[patrolBoat.getX()][i + patrolBoat.getY()] = 0;
 				}
 			} else {
 				for (int i = 0; i < 2; i++) {
-					board[i + pb.getX()][pb.getY()] = 0;
+					board[i + patrolBoat.getX()][patrolBoat.getY()] = 0;
 				}
 			}
 		}
@@ -334,59 +334,59 @@ public class Player {
 
 		if (shipPlace[0]) {
 			for (int i = 0; i < 5; i++) {
-				if (ac.getDirectionOfShip().equals("Vertical")) {
-					board[(ac.getX())][i + ac.getY()] = 1;
-					addBoard(ac.getX() + 1, ac.getY() + i + 1);
-				} else if (ac.getDirectionOfShip().equals("Horizontal")) {
-					board[i + ac.getX()][ac.getY()] = 1;
-					addBoard(ac.getX() + i + 1, ac.getY() + 1);
+				if (aircraftCarrier.getDirectionOfShip().equals("Vertical")) {
+					board[(aircraftCarrier.getX())][i + aircraftCarrier.getY()] = 1;
+					addBoard(aircraftCarrier.getX() + 1, aircraftCarrier.getY() + i + 1);
+				} else if (aircraftCarrier.getDirectionOfShip().equals("Horizontal")) {
+					board[i + aircraftCarrier.getX()][aircraftCarrier.getY()] = 1;
+					addBoard(aircraftCarrier.getX() + i + 1, aircraftCarrier.getY() + 1);
 				}
 			}
 
 		}
 		if (shipPlace[1]) {
 			for (int i = 0; i < 4; i++) {
-				if (bs.getDirectionOfShip().equals("Vertical")) {
-					board[(bs.getX())][i + bs.getY()] = 1;
-					addBoard(bs.getX() + 1, bs.getY() + i + 1);
-				} else if (bs.getDirectionOfShip().equals("Horizontal")) {
-					board[i + bs.getX()][bs.getY()] = 1;
-					addBoard(bs.getX() + i + 1, bs.getY() + 1);
+				if (battleship.getDirectionOfShip().equals("Vertical")) {
+					board[(battleship.getX())][i + battleship.getY()] = 1;
+					addBoard(battleship.getX() + 1, battleship.getY() + i + 1);
+				} else if (battleship.getDirectionOfShip().equals("Horizontal")) {
+					board[i + battleship.getX()][battleship.getY()] = 1;
+					addBoard(battleship.getX() + i + 1, battleship.getY() + 1);
 				}
 			}
 
 		}
 		if (shipPlace[2]) {
 			for (int i = 0; i < 3; i++) {
-				if (sb.getDirectionOfShip().equals("Vertical")) {
-					board[(sb.getX())][i + sb.getY()] = 1;
-					addBoard(sb.getX() + 1, sb.getY() + i + 1);
-				} else if (sb.getDirectionOfShip().equals("Horizontal")) {
-					board[i + sb.getX()][sb.getY()] = 1;
-					addBoard(sb.getX() + i + 1, sb.getY() + 1);
+				if (submarine.getDirectionOfShip().equals("Vertical")) {
+					board[(submarine.getX())][i + submarine.getY()] = 1;
+					addBoard(submarine.getX() + 1, submarine.getY() + i + 1);
+				} else if (submarine.getDirectionOfShip().equals("Horizontal")) {
+					board[i + submarine.getX()][submarine.getY()] = 1;
+					addBoard(submarine.getX() + i + 1, submarine.getY() + 1);
 				}
 			}
 
 		}
 		if (shipPlace[3]) {
 			for (int i = 0; i < 3; i++) {
-				if (ds.getDirectionOfShip().equals("Vertical")) {
-					board[(ds.getX())][i + ds.getY()] = 1;
-					addBoard(ds.getX() + 1, ds.getY() + i + 1);
-				} else if (ds.getDirectionOfShip().equals("Horizontal")) {
-					board[i + ds.getX()][ds.getY()] = 1;
-					addBoard(ds.getX() + i + 1, ds.getY() + 1);
+				if (destroyer.getDirectionOfShip().equals("Vertical")) {
+					board[(destroyer.getX())][i + destroyer.getY()] = 1;
+					addBoard(destroyer.getX() + 1, destroyer.getY() + i + 1);
+				} else if (destroyer.getDirectionOfShip().equals("Horizontal")) {
+					board[i + destroyer.getX()][destroyer.getY()] = 1;
+					addBoard(destroyer.getX() + i + 1, destroyer.getY() + 1);
 				}
 			}
 		}
 		if (shipPlace[4]) {
 			for (int i = 0; i < 2; i++) {
-				if (pb.getDirectionOfShip().equals("Vertical")) {
-					board[(pb.getX())][i + pb.getY()] = 1;
-					addBoard(pb.getX() + 1, pb.getY() + i + 1);
-				} else if (pb.getDirectionOfShip().equals("Horizontal")) {
-					board[i + pb.getX()][pb.getY()] = 1;
-					addBoard(pb.getX() + i + 1, pb.getY() + 1);
+				if (patrolBoat.getDirectionOfShip().equals("Vertical")) {
+					board[(patrolBoat.getX())][i + patrolBoat.getY()] = 1;
+					addBoard(patrolBoat.getX() + 1, patrolBoat.getY() + i + 1);
+				} else if (patrolBoat.getDirectionOfShip().equals("Horizontal")) {
+					board[i + patrolBoat.getX()][patrolBoat.getY()] = 1;
+					addBoard(patrolBoat.getX() + i + 1, patrolBoat.getY() + 1);
 				}
 			}
 		}
@@ -401,7 +401,7 @@ public class Player {
 			// it hasn't been done before
 			if (shipName.equals("Aircraft Carrier")) {
 				if (y <= 6) {
-					ac = new Ship("Aircraft Carrier", "Vertical", 5, x - 1,
+					aircraftCarrier = new Ship("Aircraft Carrier", "Vertical", 5, x - 1,
 							y - 1);
 					for (int i = 0; i < 5; i++) {
 						board[(x - 1)][i + y - 1] = 1;
@@ -411,7 +411,7 @@ public class Player {
 
 			if (shipName.equals("Battleship")) {
 				if (y <= 7) {
-					bs = new Ship("Battleship", "Vertical", 4, x - 1, y - 1);
+					battleship = new Ship("Battleship", "Vertical", 4, x - 1, y - 1);
 					for (int i = 0; i < 4; i++) {
 						board[(x - 1)][i + y - 1] = 1;
 					}
@@ -420,7 +420,7 @@ public class Player {
 
 			if (shipName.equals("Submarine")) {
 				if (y <= 8) {
-					sb = new Ship("Submarine", "Vertical", 3, x - 1, y - 1);
+					submarine = new Ship("Submarine", "Vertical", 3, x - 1, y - 1);
 					for (int i = 0; i < 3; i++) {
 						board[(x - 1)][i + y - 1] = 1;
 					}
@@ -429,7 +429,7 @@ public class Player {
 
 			if (shipName.equals("Destroyer")) {
 				if (y <= 8) {
-					ds = new Ship("Destroyer", "Vertical", 3, x - 1, y - 1);
+					destroyer = new Ship("Destroyer", "Vertical", 3, x - 1, y - 1);
 					for (int i = 0; i < 3; i++) {
 						board[(x - 1)][i + y - 1] = 1;
 					}
@@ -438,7 +438,7 @@ public class Player {
 
 			if (shipName.equals("Patrol Boat")) {
 				if (y <= 9) {
-					pb = new Ship("Patrol Boat", "Vertical", 2, x - 1, y - 1);
+					patrolBoat = new Ship("Patrol Boat", "Vertical", 2, x - 1, y - 1);
 					for (int i = 0; i < 2; i++) {
 						board[(x - 1)][i + y - 1] = 1;
 					}
@@ -451,7 +451,7 @@ public class Player {
 		if (shipDirection.equals("Horizontal")) {
 			if (shipName.equals("Aircraft Carrier")) {
 				if (x <= 6) {
-					ac = new Ship("Aircraft Carrier", "Horizontal", 5, x - 1,
+					aircraftCarrier = new Ship("Aircraft Carrier", "Horizontal", 5, x - 1,
 							y - 1);
 					for (int i = 0; i < 5; i++) {
 						board[i + x - 1][y - 1] = 1;
@@ -461,7 +461,7 @@ public class Player {
 
 			if (shipName.equals("Battleship")) {
 				if (x <= 7) {
-					bs = new Ship("Battleship", "Horizontal", 4, x - 1, y - 1);
+					battleship = new Ship("Battleship", "Horizontal", 4, x - 1, y - 1);
 					for (int i = 0; i < 4; i++) {
 						board[i + x - 1][y - 1] = 1;
 					}
@@ -470,7 +470,7 @@ public class Player {
 
 			if (shipName.equals("Submarine")) {
 				if (x <= 8) {
-					sb = new Ship("Submarine", "Horizontal", 3, x - 1, y - 1);
+					submarine = new Ship("Submarine", "Horizontal", 3, x - 1, y - 1);
 					for (int i = 0; i < 3; i++) {
 						board[i + x - 1][y - 1] = 1;
 					}
@@ -479,7 +479,7 @@ public class Player {
 
 			if (shipName.equals("Destroyer")) {
 				if (x <= 8) {
-					ds = new Ship("Destroyer", "Horizontal", 3, x - 1, y - 1);
+					destroyer = new Ship("Destroyer", "Horizontal", 3, x - 1, y - 1);
 					for (int i = 0; i < 3; i++) {
 						board[i + x - 1][y - 1] = 1;
 					}
@@ -488,7 +488,7 @@ public class Player {
 
 			if (shipName.equals("Patrol Boat")) {
 				if (x <= 9) {
-					pb = new Ship("Patrol Boat", "Horizontal", 2, x - 1, y - 1);
+					patrolBoat = new Ship("Patrol Boat", "Horizontal", 2, x - 1, y - 1);
 					for (int i = 0; i < 2; i++) {
 						board[i + x - 1][y - 1] = 1;
 					}
@@ -579,7 +579,7 @@ public class Player {
 			// it hasn't been done before
 			if (shipName.equals("Aircraft Carrier")) {
 				if (y <= 6 && shipPlace[0] != true) {
-					ac = new Ship("Aircraft Carrier", "Vertical", 5, x - 1,
+					aircraftCarrier = new Ship("Aircraft Carrier", "Vertical", 5, x - 1,
 							y - 1);
 					for (int i = 0; i < 5; i++) {
 						board[(x - 1)][i + y - 1] = 1;
@@ -593,7 +593,7 @@ public class Player {
 			if (shipName.equals("Battleship")) {
 				if (y <= 7 && shipPlace[1] != true) {
 					for (int i = 0; i < 4; i++) {
-						bs = new Ship("Battleship", "Vertical", 4, x - 1, y - 1);
+						battleship = new Ship("Battleship", "Vertical", 4, x - 1, y - 1);
 						board[x - 1][i + y - 1] = 1;
 						addBoard(x, y + i);
 					}
@@ -604,7 +604,7 @@ public class Player {
 
 			if (shipName.equals("Submarine")) {
 				if (y <= 8 && shipPlace[2] != true) {
-					sb = new Ship("Submarine", "Vertical", 3, x - 1, y - 1);
+					submarine = new Ship("Submarine", "Vertical", 3, x - 1, y - 1);
 					for (int i = 0; i < 3; i++) {
 						board[x - 1][i + y - 1] = 1;
 						addBoard(x, y + i);
@@ -617,7 +617,7 @@ public class Player {
 			if (shipName.equals("Destroyer")) {
 				if (y <= 8 && shipPlace[3] != true) {
 					for (int i = 0; i < 3; i++) {
-						ds = new Ship("Destroyer", "Vertical", 3, x - 1, y - 1);
+						destroyer = new Ship("Destroyer", "Vertical", 3, x - 1, y - 1);
 						board[x - 1][i + y - 1] = 1;
 						addBoard(x, y + i);
 					}
@@ -629,7 +629,7 @@ public class Player {
 			if (shipName.equals("Patrol Boat")) {
 				if (y <= 9 && shipPlace[4] != true) {
 					for (int i = 0; i < 2; i++) {
-						pb = new Ship("Patrol Boat", "Vertical", 2, x - 1,
+						patrolBoat = new Ship("Patrol Boat", "Vertical", 2, x - 1,
 								y - 1);
 						board[x - 1][i + y - 1] = 1;
 						addBoard(x, y + i);
@@ -645,7 +645,7 @@ public class Player {
 		if (shipDirection.equals("Horizontal")) {
 			if (shipName.equals("Aircraft Carrier")) {
 				if (x <= 6 && shipPlace[0] != true) {
-					ac = new Ship("Aircraft Carrier", "Horizontal", 5, x - 1,
+					aircraftCarrier = new Ship("Aircraft Carrier", "Horizontal", 5, x - 1,
 							y - 1);
 					for (int i = 0; i < 5; i++) {
 						board[i + x - 1][y - 1] = 1;
@@ -658,7 +658,7 @@ public class Player {
 
 			if (shipName.equals("Battleship")) {
 				if (x <= 7 && shipPlace[1] != true) {
-					bs = new Ship("Battleship", "Horizontal", 4, x - 1, y - 1);
+					battleship = new Ship("Battleship", "Horizontal", 4, x - 1, y - 1);
 					for (int i = 0; i < 4; i++) {
 						board[i + x - 1][y - 1] = 1;
 						addBoard(x + i, y);
@@ -670,7 +670,7 @@ public class Player {
 
 			if (shipName.equals("Submarine")) {
 				if (x <= 8 && shipPlace[2] != true) {
-					sb = new Ship("Submarine", "Horizontal", 3, x - 1, y - 1);
+					submarine = new Ship("Submarine", "Horizontal", 3, x - 1, y - 1);
 					for (int i = 0; i < 3; i++) {
 						board[i + x - 1][y - 1] = 1;
 						addBoard(x + i, y);
@@ -682,7 +682,7 @@ public class Player {
 
 			if (shipName.equals("Destroyer")) {
 				if (x <= 8 && shipPlace[3] != true) {
-					ds = new Ship("Destroyer", "Horizontal", 3, x - 1, y - 1);
+					destroyer = new Ship("Destroyer", "Horizontal", 3, x - 1, y - 1);
 					for (int i = 0; i < 3; i++) {
 						board[i + x - 1][y - 1] = 1;
 						addBoard(x + i, y);
@@ -694,7 +694,7 @@ public class Player {
 
 			if (shipName.equals("Patrol Boat")) {
 				if (x <= 9 && shipPlace[4] != true) {
-					pb = new Ship("Patrol Boat", "Horizontal", 2, x - 1, y - 1);
+					patrolBoat = new Ship("Patrol Boat", "Horizontal", 2, x - 1, y - 1);
 					for (int i = 0; i < 2; i++) {
 						board[i + x - 1][y - 1] = 1;
 						addBoard(x + i, y);
@@ -1112,10 +1112,10 @@ public class Player {
 
 	// Makes a count of the number of hits each ship has
 	private boolean sameShip(int x, int y) throws IOException {
-		if (isRange(opponent.ac, x, y)) {
-			opponent.ac.addHits();
-			if (opponent.ac.sunk()) {
-				cpuFillSunk(opponent.ac);
+		if (isRange(opponent.aircraftCarrier, x, y)) {
+			opponent.aircraftCarrier.addHits();
+			if (opponent.aircraftCarrier.sunk()) {
+				cpuFillSunk(opponent.aircraftCarrier);
 				resetCpu();
 				JOptionPane.showMessageDialog(sunkFrame,
 						"Your Aircraft Carrier was sunk");
@@ -1125,10 +1125,10 @@ public class Player {
 			}
 			lastShip = "ac";
 			return false;
-		} else if (isRange(opponent.bs, x, y)) {
-			opponent.bs.addHits();
-			if (opponent.bs.sunk()) {
-				cpuFillSunk(opponent.bs);
+		} else if (isRange(opponent.battleship, x, y)) {
+			opponent.battleship.addHits();
+			if (opponent.battleship.sunk()) {
+				cpuFillSunk(opponent.battleship);
 				resetCpu();
 				JOptionPane.showMessageDialog(sunkFrame,
 						"Your Battleship was sunk");
@@ -1138,10 +1138,10 @@ public class Player {
 			}
 			lastShip = "bs";
 			return false;
-		} else if (isRange(opponent.ds, x, y)) {
-			opponent.ds.addHits();
-			if (opponent.ds.sunk()) {
-				cpuFillSunk(opponent.ds);
+		} else if (isRange(opponent.destroyer, x, y)) {
+			opponent.destroyer.addHits();
+			if (opponent.destroyer.sunk()) {
+				cpuFillSunk(opponent.destroyer);
 				resetCpu();
 				JOptionPane.showMessageDialog(sunkFrame,
 						"Your Destroyer was sunk");
@@ -1151,10 +1151,10 @@ public class Player {
 			}
 			lastShip = "ds";
 			return false;
-		} else if (isRange(opponent.sb, x, y)) {
-			opponent.sb.addHits();
-			if (opponent.sb.sunk()) {
-				cpuFillSunk(opponent.sb);
+		} else if (isRange(opponent.submarine, x, y)) {
+			opponent.submarine.addHits();
+			if (opponent.submarine.sunk()) {
+				cpuFillSunk(opponent.submarine);
 				resetCpu();
 				JOptionPane.showMessageDialog(sunkFrame,
 						"Your Submarine was sunk");
@@ -1164,10 +1164,10 @@ public class Player {
 			}
 			lastShip = "sb";
 			return false;
-		} else if (isRange(opponent.pb, x, y)) {
-			opponent.pb.addHits();
-			if (opponent.pb.sunk()) {
-				cpuFillSunk(opponent.pb);
+		} else if (isRange(opponent.patrolBoat, x, y)) {
+			opponent.patrolBoat.addHits();
+			if (opponent.patrolBoat.sunk()) {
+				cpuFillSunk(opponent.patrolBoat);
 				resetCpu();
 				JOptionPane.showMessageDialog(sunkFrame,
 						"Your Patrol Boat was sunk");
@@ -1400,103 +1400,6 @@ public class Player {
 	// Classes-----------------------------------------------------------------
 	
 	// Holds the values for the ships
-	public class Ship {
-		String name, directionOfShip;
-		int x, y, size, hits;
-
-		public Ship(String name, String directionOfShip, int size, int x, int y) {
-			this.name = name;
-			this.directionOfShip = directionOfShip;
-			this.size = size;
-			this.x = x;
-			this.y = y;
-			this.hits = 0;
-		}
-
-		public void shipReset() {
-			x = 0;
-			y = 0;
-			directionOfShip = "";
-
-		}
-
-		public Ship() {
-
-		}
-
-		public void printShips() {
-
-			System.out.println(name);
-			System.out.println(directionOfShip);
-			System.out.println(x);
-			System.out.println(y);
-			System.out.println(size);
-			System.out.println(hits);
-		}
-
-		public boolean sunk() {
-			if (this.hits == this.size) {
-				return true;
-			} else {
-				return false;
-			}
-		}
-
-		public String getName() {
-			return name;
-		}
-
-		public void setName(String name) {
-			this.name = name;
-		}
-
-		public String getDirectionOfShip() {
-			return directionOfShip;
-		}
-
-		public void setDirectionOfShip(String directionOfShip) {
-			this.directionOfShip = directionOfShip;
-		}
-
-		public int getX() {
-			return x;
-		}
-
-		public void setX(int x) {
-			this.x = x;
-		}
-
-		public int getY() {
-			return y;
-		}
-
-		public void setY(int y) {
-			this.y = y;
-		}
-
-		public int getSize() {
-			return size;
-		}
-
-		public void setSize(int size) {
-			this.size = size;
-		}
-
-		public int getHits() {
-			return hits;
-		}
-
-		public void setHits(int hits) {
-			this.hits = hits;
-		}
-
-		public void addHits() {
-			this.hits++;
-		}
-
-	}
-
-	// Takes values of mouse clicks for the game board.
 	public class setupMouseListener implements MouseListener {
 		public void mouseClicked(MouseEvent e) {
 			int x = getGrid(e.getX());
@@ -1531,7 +1434,7 @@ public class Player {
 
 		public void mouseReleased(MouseEvent arg0) {
 		}
-	}
+}
 
 	// Takes values to pass to fire
 	public class gameMouseListener implements MouseListener {
