@@ -1503,7 +1503,6 @@ public class Player {
 	
 	// Classes-----------------------------------------------------------------
 	
-	// Holds the values for the ships
 	public class setupMouseListener implements MouseListener {
 		public void mouseClicked(MouseEvent e) {
 			int x = getGrid(e.getX());
