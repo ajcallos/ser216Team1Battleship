@@ -19,12 +19,19 @@ public class Menu {
 	final static File file_2 = new File("src/res/img/credits.jpg");
 	public Image icon = Toolkit.getDefaultToolkit()
 			.getImage("src/res/img/icon.gif");
+	
+	//Background Music Tracks
+	private final static String BACKGROUND_MUSIC_TRACK = "a thing 1 minute.wav";
+	
+	//Background Music Manger
+	private BackgroundMusic myMusicPlayer;
 
 	// Creates the main menu
 	Menu() throws IOException {
 		windowGUI(mainFrame, mainPanel);
 		mainButtons();
-
+		myMusicPlayer = new BackgroundMusic(BACKGROUND_MUSIC_TRACK);
+		myMusicPlayer.play();
 	}
 
 	// Makes the window the Menu appears in
@@ -69,6 +76,7 @@ public class Menu {
 
 		exitButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				myMusicPlayer.close();
 				System.exit(0);
 			}
 		});
