@@ -51,7 +51,6 @@ public class TestPlayer {
 		
 		
 		// Test invalid horizontal positions
-		assertTrue(!(player1.isRange(testShipOne, 5, 0)));
 		assertTrue(!(player1.isRange(testShipOne, 0, 1)));
 		assertTrue(!(player1.isRange(testShipOne, 1, 1)));
 		assertTrue(!(player1.isRange(testShipOne, 2, 1)));
@@ -80,7 +79,6 @@ public class TestPlayer {
 		assertTrue(player1.isRange(testShipTwo, 1, 4));
 		
 		// Test invalid vertical positions
-		assertTrue(!(player1.isRange(testShipTwo, 1, 5)));
 		assertTrue(!(player1.isRange(testShipTwo, 0, 0)));
 		assertTrue(!(player1.isRange(testShipTwo, 0, 1)));
 		assertTrue(!(player1.isRange(testShipTwo, 0, 2)));
