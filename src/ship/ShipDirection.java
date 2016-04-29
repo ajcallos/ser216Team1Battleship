@@ -1,4 +1,4 @@
-package battleship;
+package ship;
 
 public enum ShipDirection {
 	HORIZONTAL,
