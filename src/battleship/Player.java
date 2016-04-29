@@ -18,10 +18,21 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-public class Player {
+import ship.Ship;
+import ship.ShipDirection;
+import ship.ShipFactory;
+import ship.ShipType;
 
+public class Player {
+	
 	// Variables----------------------------------------------------------------------------
 	// Values
+	
+	private final static ShipType[] SHIP_TYPES = {
+			ShipType.PATROL_BOAT, ShipType.SUBMARINE, ShipType.DESTROYER,
+			ShipType.BATTLESHIP, ShipType.AIRCRAFT_CARRIER
+	};
+	
 	private int hits = 0;
 	@SuppressWarnings("unused")
 	private static int misses = 0;
@@ -29,25 +40,28 @@ public class Player {
 	private int[][] gameBoard = new int[10][10];
 	private boolean[] shipPlace = new boolean[5];
 	private boolean turn = true;
-	private String shipName = "";
+
+	private Ship currentShip;
+	
 	private Player opponent;
 	
 	// private Player currentPlayer;
 	String currentPlayer1 = "";
 	private static Component sunkFrame;
 	
-	// Player objects
-	Ship aircraftCarrier = new Ship();
-	Ship battleship = new Ship();
-	Ship destroyer = new Ship();
-	Ship submarine = new Ship();
-	Ship patrolBoat = new Ship();
-
-	// CPU values
-	private final static int[] BATTLESHIP_SIZES = new int[] { 5, 4, 3, 3, 2 };
+	private Ship myPatrolBoat;
+	private Ship mySubmarine;
+	private Ship myDestroyer;
+	private Ship myBattleship;
+	private Ship myAircraftCarrier;
+	
+	// Deprecated
 	private String cpuShipNames[] = new String[] { "Aircraft Carrier",
 			"Battleship", "Destroyer", "Submarine", "Patrol Boat" };
-	private Ship cpuShips[] = new Ship[5];
+	
+	private Ship playerShips[];
+	private Ship cpuShips[];
+	
 	private final boolean[] cpuCompass = new boolean[4];
 	private final Random random = new Random();
 	private int orientation = 0;
@@ -86,33 +100,53 @@ public class Player {
 	private JPanel sunkBoxPanel = new JPanel();
 	MouseListener gameListener = new gameMouseListener();
 
+	private static final ShipDirection DEFAULT_DIRECTION = ShipDirection.HORIZONTAL;
+	
 	// Ship selection components
-	private String shipDirection = "";
+	private ShipDirection shipDirection = DEFAULT_DIRECTION;
 	private JPanel boardPanel = new JPanel();
-	private String shipsListArray[] = { "Aircraft Carrier", "Battleship",
-			"Destroyer", "Submarine", "Patrol Boat" };
-	private JList<String> shipList = new JList<String>(shipsListArray);
-	private String shipDirections[] = { "Horizontal", "Vertical" };
-	private JList<String> directionList = new JList<String>(shipDirections);
+	
+	// TODO: figure out why this is organized like it is; it seems like going overboard
+	// For now, switched to ShipType enum from String.
+	private ShipType shipsListArray[] = { ShipType.AIRCRAFT_CARRIER, ShipType.BATTLESHIP,
+			ShipType.DESTROYER, ShipType.SUBMARINE, ShipType.PATROL_BOAT
+			};
+
+	private JList<ShipType> shipList = new JList<ShipType>(shipsListArray);
+	private ShipDirection shipDirections[] = { ShipDirection.HORIZONTAL, ShipDirection.VERTICAL };
+	private JList<ShipDirection> directionList = new JList<ShipDirection>(shipDirections);
 	private JButton doneButton;
 
 	// The main class
 	// ---------------------------------------------------------------
 	
+	/**
+	 * Constructor; enforces only one finite set of ships per player via ShipFactory 
+	 * @param currentPlayer
+	 * @throws IOException
+	 */
 	public Player(String currentPlayer) throws IOException {
 		this.currentPlayer1 = currentPlayer;
+		ShipFactory myShipFactory = new ShipFactory();
+		myPatrolBoat = myShipFactory.getPatrolBoat();
+		mySubmarine = myShipFactory.getSubmarine();
+		myDestroyer = myShipFactory.getDestroyer();
+		myBattleship = myShipFactory.getBattleship();
+		myAircraftCarrier = myShipFactory.getAircraftCarrier();
+		playerShips = myShipFactory.getShipArray();
+		
 	}
 
 	// Figures out if the ship is where you fired
 	public boolean isRange(Ship ship, int x, int y) {
-		if (ship.getDirectionOfShip().equals("Vertical")) {
+		if (ship.getDirectionOfShip() == ShipDirection.VERTICAL) {
 			if (ship.getX() == x) {
 				if (ship.getY() <= y && y <= (ship.getY() + ship.getSize())) {
 					return true;
 				}
 			}
 		}
-		if (ship.getDirectionOfShip().equals("Horizontal")) {
+		if (ship.getDirectionOfShip() == ShipDirection.HORIZONTAL) {
 			if (ship.getY() == y) {
 				if (ship.getX() <= x && x <= (ship.getX() + ship.getSize())) {
 					return true;
@@ -125,62 +159,62 @@ public class Player {
 	// For replacing the ships it removes the old ship from the array
 	public void removeOldShip() {
 		
-		if (shipName.equals("Aircraft Carrier")) {
-			if (aircraftCarrier.getDirectionOfShip().equals("Vertical")) {
+		if (currentShip.getType() == ShipType.AIRCRAFT_CARRIER) {
+			if (myAircraftCarrier.getDirectionOfShip() == ShipDirection.VERTICAL) {
 				for (int i = 0; i < 5; i++) {
-					board[aircraftCarrier.getX()][i + aircraftCarrier.getY()] = 0;
+					board[myAircraftCarrier.getX()][i + myAircraftCarrier.getY()] = 0;
 				}
 			} else {
 				for (int i = 0; i < 5; i++) {
-					board[i + aircraftCarrier.getX()][aircraftCarrier.getY()] = 0;
+					board[i + myAircraftCarrier.getX()][myAircraftCarrier.getY()] = 0;
 				}
 			}
 		}
 
-		if (shipName.equals("Battleship")) {
-			if (battleship.getDirectionOfShip().equals("Vertical")) {
+		if (currentShip.getType() == ShipType.BATTLESHIP) {
+			if (myBattleship.getDirectionOfShip() == ShipDirection.VERTICAL) {
 				for (int i = 0; i < 4; i++) {
-					board[battleship.getX()][i + battleship.getY()] = 0;
+					board[myBattleship.getX()][i + myBattleship.getY()] = 0;
 				}
 			} else {
 				for (int i = 0; i < 4; i++) {
-					board[i + battleship.getX()][battleship.getY()] = 0;
+					board[i + myBattleship.getX()][myBattleship.getY()] = 0;
 				}
 			}
 		}
 
-		if (shipName.equals("Submarine")) {
-			if (submarine.getDirectionOfShip().equals("Vertical")) {
+		if (currentShip.getType() == ShipType.SUBMARINE) {
+			if (mySubmarine.getDirectionOfShip() == ShipDirection.VERTICAL) {
 				for (int i = 0; i < 3; i++) {
-					board[submarine.getX()][i + submarine.getY()] = 0;
+					board[mySubmarine.getX()][i + mySubmarine.getY()] = 0;
 				}
 			} else {
 				for (int i = 0; i < 3; i++) {
-					board[i + submarine.getX()][submarine.getY()] = 0;
+					board[i + mySubmarine.getX()][mySubmarine.getY()] = 0;
 				}
 			}
 		}
 
-		if (shipName.equals("Destroyer")) {
-			if (destroyer.getDirectionOfShip().equals("Vertical")) {
+		if (currentShip.getType() == ShipType.DESTROYER) {
+			if (myDestroyer.getDirectionOfShip() == ShipDirection.VERTICAL) {
 				for (int i = 0; i < 3; i++) {
-					board[destroyer.getX()][i + destroyer.getY()] = 0;
+					board[myDestroyer.getX()][i + myDestroyer.getY()] = 0;
 				}
 			} else {
 				for (int i = 0; i < 3; i++) {
-					board[i + destroyer.getX()][destroyer.getY()] = 0;
+					board[i + myDestroyer.getX()][myDestroyer.getY()] = 0;
 				}
 			}
 		}
 
-		if (shipName.equals("Patrol Boat")) {
-			if (patrolBoat.getDirectionOfShip().equals("Vertical")) {
+		if (currentShip.getType() == ShipType.PATROL_BOAT) {
+			if (myPatrolBoat.getDirectionOfShip() == ShipDirection.VERTICAL) {
 				for (int i = 0; i < 2; i++) {
-					board[patrolBoat.getX()][i + patrolBoat.getY()] = 0;
+					board[myPatrolBoat.getX()][i + myPatrolBoat.getY()] = 0;
 				}
 			} else {
 				for (int i = 0; i < 2; i++) {
-					board[i + patrolBoat.getX()][patrolBoat.getY()] = 0;
+					board[i + myPatrolBoat.getX()][myPatrolBoat.getY()] = 0;
 				}
 			}
 		}
@@ -189,7 +223,7 @@ public class Player {
 
 	// find if the ship will be off the board 
 	public boolean validPlace(int x, int y) {
-		if (shipName.equals("Aircraft Carrier")) {
+		if (currentShip.getType() == ShipType.AIRCRAFT_CARRIER) {
 			if (shipDirection.equals("Vertical") && y <= 6) {
 				return true;
 			}
@@ -198,7 +232,7 @@ public class Player {
 			}
 		}
 
-		if (shipName.equals("Battleship")) {
+		if (currentShip.getType() == ShipType.BATTLESHIP) {
 			if (shipDirection.equals("Vertical") && y <= 7) {
 				return true;
 			}
@@ -207,7 +241,7 @@ public class Player {
 			}
 		}
 
-		if (shipName.equals("Submarine")) {
+		if (currentShip.getType() == ShipType.SUBMARINE) {
 			if (shipDirection.equals("Vertical") && y <= 8) {
 				return true;
 			}
@@ -216,7 +250,7 @@ public class Player {
 			}
 		}
 
-		if (shipName.equals("Destroyer")) {
+		if (currentShip.getType() == ShipType.DESTROYER) {
 			if (shipDirection.equals("Vertical") && y <= 8) {
 				return true;
 			}
@@ -225,7 +259,7 @@ public class Player {
 			}
 		}
 
-		if (shipName.equals("Patrol Boat")) {
+		if (currentShip.getType() == ShipType.PATROL_BOAT) {
 			if (shipDirection.equals("Vertical") && y <= 9) {
 				return true;
 			}
@@ -240,15 +274,15 @@ public class Player {
 
 	// Looks to see if you can put the ship down
 	public boolean freeBoard(int x, int y){
-		if (shipName.equals("Aircraft Carrier")) {
-			if (shipDirection.equals("Vertical")) {
+		if (currentShip.getType() == ShipType.AIRCRAFT_CARRIER) {
+			if (shipDirection == ShipDirection.VERTICAL) {
 				for (int i = 0; i < 5; i++) {
 					if(board[(x - 1)][i + y - 1] == 1){
 						return false;
 					}
 				}
 			}
-			if (shipDirection.equals("Horizontal")) {
+			if (shipDirection == ShipDirection.HORIZONTAL) {
 				for (int i = 0; i < 5; i++) {
 					if(board[(i + x - 1)][y - 1] == 1){
 						return false;
@@ -257,15 +291,15 @@ public class Player {
 			}
 		}
 		
-		if (shipName.equals("Battleship")) {
-			if (shipDirection.equals("Vertical")) {
+		if (currentShip.getType() == ShipType.BATTLESHIP) {
+			if (shipDirection == ShipDirection.VERTICAL) {
 				for (int i = 0; i < 4; i++) {
 					if(board[(x - 1)][i + y - 1] == 1){
 						return false;
 					}
 				}
 			}
-			if (shipDirection.equals("Horizontal")) {
+			if (shipDirection == ShipDirection.HORIZONTAL) {
 				for (int i = 0; i < 4; i++) {
 					if(board[(i + x - 1)][y - 1] == 1){
 						return false;
@@ -274,15 +308,15 @@ public class Player {
 			}
 		}
 
-		if (shipName.equals("Submarine")) {
-			if (shipDirection.equals("Vertical")) {
+		if (currentShip.getType() == ShipType.SUBMARINE) {
+			if (shipDirection == ShipDirection.VERTICAL) {
 				for (int i = 0; i < 3; i++) {
 					if(board[(x - 1)][i + y - 1] == 1){
 						return false;
 					}
 				}
 			}
-			if (shipDirection.equals("Horizontal")) {
+			if (shipDirection == ShipDirection.HORIZONTAL) {
 				for (int i = 0; i < 3; i++) {
 					if(board[(i + x - 1)][y - 1] == 1){
 						return false;
@@ -291,15 +325,15 @@ public class Player {
 			}
 		}
 
-		if (shipName.equals("Destroyer")) {
-			if (shipDirection.equals("Vertical")) {
+		if (currentShip.getType() == ShipType.DESTROYER) {
+			if (shipDirection == ShipDirection.VERTICAL) {
 				for (int i = 0; i < 3; i++) {
 					if(board[(x - 1)][i + y - 1] == 1){
 						return false;
 					}
 				}
 			}
-			if (shipDirection.equals("Horizontal")) {
+			if (shipDirection == ShipDirection.HORIZONTAL) {
 				for (int i = 0; i < 3; i++) {
 					if(board[(i + x - 1)][y - 1] == 1){
 						return false;
@@ -308,15 +342,15 @@ public class Player {
 			}
 		}
 
-		if (shipName.equals("Patrol Boat")) {
-			if (shipDirection.equals("Vertical")) {
+		if (currentShip.getType() == ShipType.PATROL_BOAT) {
+			if (shipDirection == ShipDirection.VERTICAL) {
 				for (int i = 0; i < 2; i++) {
 					if(board[(x - 1)][i + y - 1] == 1){
 						return false;
 					}
 				}
 			}
-			if (shipDirection.equals("Horizontal")) {
+			if (shipDirection == ShipDirection.HORIZONTAL) {
 				for (int i = 0; i < 2; i++) {
 					if(board[(i + x - 1)][y - 1] == 1){
 						return false;
@@ -334,59 +368,59 @@ public class Player {
 
 		if (shipPlace[0]) {
 			for (int i = 0; i < 5; i++) {
-				if (aircraftCarrier.getDirectionOfShip().equals("Vertical")) {
-					board[(aircraftCarrier.getX())][i + aircraftCarrier.getY()] = 1;
-					addBoard(aircraftCarrier.getX() + 1, aircraftCarrier.getY() + i + 1);
-				} else if (aircraftCarrier.getDirectionOfShip().equals("Horizontal")) {
-					board[i + aircraftCarrier.getX()][aircraftCarrier.getY()] = 1;
-					addBoard(aircraftCarrier.getX() + i + 1, aircraftCarrier.getY() + 1);
+				if (myAircraftCarrier.getDirectionOfShip() == ShipDirection.VERTICAL) {
+					board[(myAircraftCarrier.getX())][i + myAircraftCarrier.getY()] = 1;
+					addBoard(myAircraftCarrier.getX() + 1, myAircraftCarrier.getY() + i + 1);
+				} else if (myAircraftCarrier.getDirectionOfShip() == ShipDirection.HORIZONTAL) {
+					board[i + myAircraftCarrier.getX()][myAircraftCarrier.getY()] = 1;
+					addBoard(myAircraftCarrier.getX() + i + 1, myAircraftCarrier.getY() + 1);
 				}
 			}
 
 		}
 		if (shipPlace[1]) {
 			for (int i = 0; i < 4; i++) {
-				if (battleship.getDirectionOfShip().equals("Vertical")) {
-					board[(battleship.getX())][i + battleship.getY()] = 1;
-					addBoard(battleship.getX() + 1, battleship.getY() + i + 1);
-				} else if (battleship.getDirectionOfShip().equals("Horizontal")) {
-					board[i + battleship.getX()][battleship.getY()] = 1;
-					addBoard(battleship.getX() + i + 1, battleship.getY() + 1);
+				if (myBattleship.getDirectionOfShip() == ShipDirection.VERTICAL) {
+					board[(myBattleship.getX())][i + myBattleship.getY()] = 1;
+					addBoard(myBattleship.getX() + 1, myBattleship.getY() + i + 1);
+				} else if (myBattleship.getDirectionOfShip() == ShipDirection.HORIZONTAL) {
+					board[i + myBattleship.getX()][myBattleship.getY()] = 1;
+					addBoard(myBattleship.getX() + i + 1, myBattleship.getY() + 1);
 				}
 			}
 
 		}
 		if (shipPlace[2]) {
 			for (int i = 0; i < 3; i++) {
-				if (submarine.getDirectionOfShip().equals("Vertical")) {
-					board[(submarine.getX())][i + submarine.getY()] = 1;
-					addBoard(submarine.getX() + 1, submarine.getY() + i + 1);
-				} else if (submarine.getDirectionOfShip().equals("Horizontal")) {
-					board[i + submarine.getX()][submarine.getY()] = 1;
-					addBoard(submarine.getX() + i + 1, submarine.getY() + 1);
+				if (mySubmarine.getDirectionOfShip() == ShipDirection.VERTICAL) {
+					board[(mySubmarine.getX())][i + mySubmarine.getY()] = 1;
+					addBoard(mySubmarine.getX() + 1, mySubmarine.getY() + i + 1);
+				} else if (mySubmarine.getDirectionOfShip() == ShipDirection.HORIZONTAL) {
+					board[i + mySubmarine.getX()][mySubmarine.getY()] = 1;
+					addBoard(mySubmarine.getX() + i + 1, mySubmarine.getY() + 1);
 				}
 			}
 
 		}
 		if (shipPlace[3]) {
 			for (int i = 0; i < 3; i++) {
-				if (destroyer.getDirectionOfShip().equals("Vertical")) {
-					board[(destroyer.getX())][i + destroyer.getY()] = 1;
-					addBoard(destroyer.getX() + 1, destroyer.getY() + i + 1);
-				} else if (destroyer.getDirectionOfShip().equals("Horizontal")) {
-					board[i + destroyer.getX()][destroyer.getY()] = 1;
-					addBoard(destroyer.getX() + i + 1, destroyer.getY() + 1);
+				if (myDestroyer.getDirectionOfShip() == ShipDirection.VERTICAL) {
+					board[(myDestroyer.getX())][i + myDestroyer.getY()] = 1;
+					addBoard(myDestroyer.getX() + 1, myDestroyer.getY() + i + 1);
+				} else if (myDestroyer.getDirectionOfShip() == ShipDirection.HORIZONTAL) {
+					board[i + myDestroyer.getX()][myDestroyer.getY()] = 1;
+					addBoard(myDestroyer.getX() + i + 1, myDestroyer.getY() + 1);
 				}
 			}
 		}
 		if (shipPlace[4]) {
 			for (int i = 0; i < 2; i++) {
-				if (patrolBoat.getDirectionOfShip().equals("Vertical")) {
-					board[(patrolBoat.getX())][i + patrolBoat.getY()] = 1;
-					addBoard(patrolBoat.getX() + 1, patrolBoat.getY() + i + 1);
-				} else if (patrolBoat.getDirectionOfShip().equals("Horizontal")) {
-					board[i + patrolBoat.getX()][patrolBoat.getY()] = 1;
-					addBoard(patrolBoat.getX() + i + 1, patrolBoat.getY() + 1);
+				if (myPatrolBoat.getDirectionOfShip() == ShipDirection.VERTICAL) {
+					board[(myPatrolBoat.getX())][i + myPatrolBoat.getY()] = 1;
+					addBoard(myPatrolBoat.getX() + 1, myPatrolBoat.getY() + i + 1);
+				} else if (myPatrolBoat.getDirectionOfShip() == ShipDirection.HORIZONTAL) {
+					board[i + myPatrolBoat.getX()][myPatrolBoat.getY()] = 1;
+					addBoard(myPatrolBoat.getX() + i + 1, myPatrolBoat.getY() + 1);
 				}
 			}
 		}
@@ -396,49 +430,55 @@ public class Player {
 	// Puts the ship in a new spot in the board
 	public void replaceShip(int x, int y) throws IOException {
 		// Places the ship vertical
-		if (shipDirection.equals("Vertical")) {
+		if (shipDirection == ShipDirection.VERTICAL) {
+			
 			// For each ship it adds spots on the game board and in the array if
 			// it hasn't been done before
-			if (shipName.equals("Aircraft Carrier")) {
+			// TODO: this needs to be cleaned up; too many magic numbers.
+			if (currentShip.getType() == ShipType.AIRCRAFT_CARRIER) {
 				if (y <= 6) {
-					aircraftCarrier = new Ship("Aircraft Carrier", "Vertical", 5, x - 1,
-							y - 1);
+					currentShip.setX(x - 1);
+					currentShip.setY(y - 1);
 					for (int i = 0; i < 5; i++) {
 						board[(x - 1)][i + y - 1] = 1;
 					}
 				}
 			}
 
-			if (shipName.equals("Battleship")) {
+			if (currentShip.getType() == ShipType.BATTLESHIP) {
 				if (y <= 7) {
-					battleship = new Ship("Battleship", "Vertical", 4, x - 1, y - 1);
+					currentShip.setX(x - 1);
+					currentShip.setY(y - 1);					
 					for (int i = 0; i < 4; i++) {
 						board[(x - 1)][i + y - 1] = 1;
 					}
 				}
 			}
 
-			if (shipName.equals("Submarine")) {
+			if (currentShip.getType() == ShipType.SUBMARINE) {
 				if (y <= 8) {
-					submarine = new Ship("Submarine", "Vertical", 3, x - 1, y - 1);
+					currentShip.setX(x - 1);
+					currentShip.setY(y - 1);
 					for (int i = 0; i < 3; i++) {
 						board[(x - 1)][i + y - 1] = 1;
 					}
 				}
 			}
 
-			if (shipName.equals("Destroyer")) {
+			if (currentShip.getType() == ShipType.DESTROYER) {
 				if (y <= 8) {
-					destroyer = new Ship("Destroyer", "Vertical", 3, x - 1, y - 1);
+					currentShip.setX(x - 1);
+					currentShip.setY(y - 1);
 					for (int i = 0; i < 3; i++) {
 						board[(x - 1)][i + y - 1] = 1;
 					}
 				}
 			}
 
-			if (shipName.equals("Patrol Boat")) {
+			if (currentShip.getType() == ShipType.PATROL_BOAT) {
 				if (y <= 9) {
-					patrolBoat = new Ship("Patrol Boat", "Vertical", 2, x - 1, y - 1);
+					currentShip.setX(x - 1);
+					currentShip.setY(y - 1);
 					for (int i = 0; i < 2; i++) {
 						board[(x - 1)][i + y - 1] = 1;
 					}
@@ -448,47 +488,51 @@ public class Player {
 
 		// -----------------------------------------------------------
 
-		if (shipDirection.equals("Horizontal")) {
-			if (shipName.equals("Aircraft Carrier")) {
+		if (shipDirection == ShipDirection.HORIZONTAL) {
+			if (currentShip.getType() == ShipType.AIRCRAFT_CARRIER) {
 				if (x <= 6) {
-					aircraftCarrier = new Ship("Aircraft Carrier", "Horizontal", 5, x - 1,
-							y - 1);
+					currentShip.setX(x - 1);
+					currentShip.setY(y - 1);
 					for (int i = 0; i < 5; i++) {
 						board[i + x - 1][y - 1] = 1;
 					}
 				}
 			}
 
-			if (shipName.equals("Battleship")) {
+			if (currentShip.getType() == ShipType.BATTLESHIP) {
 				if (x <= 7) {
-					battleship = new Ship("Battleship", "Horizontal", 4, x - 1, y - 1);
+					currentShip.setX(x - 1);
+					currentShip.setY(y - 1);
 					for (int i = 0; i < 4; i++) {
 						board[i + x - 1][y - 1] = 1;
 					}
 				}
 			}
 
-			if (shipName.equals("Submarine")) {
+			if (currentShip.getType() == ShipType.SUBMARINE) {
 				if (x <= 8) {
-					submarine = new Ship("Submarine", "Horizontal", 3, x - 1, y - 1);
+					currentShip.setX(x - 1);
+					currentShip.setY(y - 1);
 					for (int i = 0; i < 3; i++) {
 						board[i + x - 1][y - 1] = 1;
 					}
 				}
 			}
 
-			if (shipName.equals("Destroyer")) {
+			if (currentShip.getType() == ShipType.DESTROYER) {
 				if (x <= 8) {
-					destroyer = new Ship("Destroyer", "Horizontal", 3, x - 1, y - 1);
+					currentShip.setX(x - 1);
+					currentShip.setY(y - 1);
 					for (int i = 0; i < 3; i++) {
 						board[i + x - 1][y - 1] = 1;
 					}
 				}
 			}
 
-			if (shipName.equals("Patrol Boat")) {
+			if (currentShip.getType() == ShipType.PATROL_BOAT) {
 				if (x <= 9) {
-					patrolBoat = new Ship("Patrol Boat", "Horizontal", 2, x - 1, y - 1);
+					currentShip.setX(x - 1);
+					currentShip.setY(y - 1);
 					for (int i = 0; i < 2; i++) {
 						board[i + x - 1][y - 1] = 1;
 					}
@@ -574,13 +618,14 @@ public class Player {
 	public boolean putShipsInBoard(int x, int y) throws IOException {
 
 		// Places the ship vertical
-		if (shipDirection.equals("Vertical")) {
+		if (shipDirection == ShipDirection.VERTICAL) {
 			// For each ship it adds spots on the game board and in the array if
 			// it hasn't been done before
-			if (shipName.equals("Aircraft Carrier")) {
+			if (currentShip.getType() == ShipType.AIRCRAFT_CARRIER) {
 				if (y <= 6 && shipPlace[0] != true) {
-					aircraftCarrier = new Ship("Aircraft Carrier", "Vertical", 5, x - 1,
-							y - 1);
+					currentShip.setX(x - 1);
+					currentShip.setY(y - 1);
+					currentShip.setDirectionOfShip(ShipDirection.VERTICAL);
 					for (int i = 0; i < 5; i++) {
 						board[(x - 1)][i + y - 1] = 1;
 						addBoard(x, y + i);
@@ -590,10 +635,12 @@ public class Player {
 				}
 			}
 
-			if (shipName.equals("Battleship")) {
+			if (currentShip.getType() == ShipType.BATTLESHIP) {
 				if (y <= 7 && shipPlace[1] != true) {
 					for (int i = 0; i < 4; i++) {
-						battleship = new Ship("Battleship", "Vertical", 4, x - 1, y - 1);
+						currentShip.setX(x - 1);
+						currentShip.setY(y - 1);
+						currentShip.setDirectionOfShip(ShipDirection.VERTICAL);
 						board[x - 1][i + y - 1] = 1;
 						addBoard(x, y + i);
 					}
@@ -602,9 +649,11 @@ public class Player {
 				}
 			}
 
-			if (shipName.equals("Submarine")) {
+			if (currentShip.getType() == ShipType.SUBMARINE) {
 				if (y <= 8 && shipPlace[2] != true) {
-					submarine = new Ship("Submarine", "Vertical", 3, x - 1, y - 1);
+					currentShip.setX(x - 1);
+					currentShip.setY(y - 1);
+					currentShip.setDirectionOfShip(ShipDirection.VERTICAL);
 					for (int i = 0; i < 3; i++) {
 						board[x - 1][i + y - 1] = 1;
 						addBoard(x, y + i);
@@ -614,10 +663,12 @@ public class Player {
 				}
 			}
 
-			if (shipName.equals("Destroyer")) {
+			if (currentShip.getType() == ShipType.DESTROYER) {
 				if (y <= 8 && shipPlace[3] != true) {
 					for (int i = 0; i < 3; i++) {
-						destroyer = new Ship("Destroyer", "Vertical", 3, x - 1, y - 1);
+						currentShip.setX(x - 1);
+						currentShip.setY(y - 1);
+						currentShip.setDirectionOfShip(ShipDirection.VERTICAL);
 						board[x - 1][i + y - 1] = 1;
 						addBoard(x, y + i);
 					}
@@ -626,11 +677,12 @@ public class Player {
 				}
 			}
 
-			if (shipName.equals("Patrol Boat")) {
+			if (currentShip.getType() == ShipType.PATROL_BOAT) {
 				if (y <= 9 && shipPlace[4] != true) {
 					for (int i = 0; i < 2; i++) {
-						patrolBoat = new Ship("Patrol Boat", "Vertical", 2, x - 1,
-								y - 1);
+						currentShip.setX(x - 1);
+						currentShip.setY(y - 1);
+						currentShip.setDirectionOfShip(ShipDirection.VERTICAL);
 						board[x - 1][i + y - 1] = 1;
 						addBoard(x, y + i);
 					}
@@ -642,11 +694,12 @@ public class Player {
 
 		// -----------------------------------------------------------
 
-		if (shipDirection.equals("Horizontal")) {
-			if (shipName.equals("Aircraft Carrier")) {
+		if (shipDirection == ShipDirection.HORIZONTAL) {
+			if (currentShip.getType() == ShipType.AIRCRAFT_CARRIER) {
 				if (x <= 6 && shipPlace[0] != true) {
-					aircraftCarrier = new Ship("Aircraft Carrier", "Horizontal", 5, x - 1,
-							y - 1);
+					currentShip.setX(x - 1);
+					currentShip.setY(y - 1);
+					currentShip.setDirectionOfShip(ShipDirection.HORIZONTAL);
 					for (int i = 0; i < 5; i++) {
 						board[i + x - 1][y - 1] = 1;
 						addBoard(x + i, y);
@@ -656,9 +709,11 @@ public class Player {
 				}
 			}
 
-			if (shipName.equals("Battleship")) {
+			if (currentShip.getType() == ShipType.BATTLESHIP) {
 				if (x <= 7 && shipPlace[1] != true) {
-					battleship = new Ship("Battleship", "Horizontal", 4, x - 1, y - 1);
+					currentShip.setX(x - 1);
+					currentShip.setY(y - 1);
+					currentShip.setDirectionOfShip(ShipDirection.HORIZONTAL);
 					for (int i = 0; i < 4; i++) {
 						board[i + x - 1][y - 1] = 1;
 						addBoard(x + i, y);
@@ -668,9 +723,11 @@ public class Player {
 				}
 			}
 
-			if (shipName.equals("Submarine")) {
+			if (currentShip.getType() == ShipType.SUBMARINE) {
 				if (x <= 8 && shipPlace[2] != true) {
-					submarine = new Ship("Submarine", "Horizontal", 3, x - 1, y - 1);
+					currentShip.setX(x - 1);
+					currentShip.setY(y - 1);
+					currentShip.setDirectionOfShip(ShipDirection.HORIZONTAL);
 					for (int i = 0; i < 3; i++) {
 						board[i + x - 1][y - 1] = 1;
 						addBoard(x + i, y);
@@ -680,9 +737,11 @@ public class Player {
 				}
 			}
 
-			if (shipName.equals("Destroyer")) {
+			if (currentShip.getType() == ShipType.DESTROYER) {
 				if (x <= 8 && shipPlace[3] != true) {
-					destroyer = new Ship("Destroyer", "Horizontal", 3, x - 1, y - 1);
+					currentShip.setX(x - 1);
+					currentShip.setY(y - 1);
+					currentShip.setDirectionOfShip(ShipDirection.HORIZONTAL);
 					for (int i = 0; i < 3; i++) {
 						board[i + x - 1][y - 1] = 1;
 						addBoard(x + i, y);
@@ -692,9 +751,11 @@ public class Player {
 				}
 			}
 
-			if (shipName.equals("Patrol Boat")) {
+			if (currentShip.getType() == ShipType.PATROL_BOAT) {
 				if (x <= 9 && shipPlace[4] != true) {
-					patrolBoat = new Ship("Patrol Boat", "Horizontal", 2, x - 1, y - 1);
+					currentShip.setX(x - 1);
+					currentShip.setY(y - 1);
+					currentShip.setDirectionOfShip(ShipDirection.HORIZONTAL);
 					for (int i = 0; i < 2; i++) {
 						board[i + x - 1][y - 1] = 1;
 						addBoard(x + i, y);
@@ -771,18 +832,20 @@ public class Player {
 		shipList.setBackground(Color.DARK_GRAY);
 		shipList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		shipList.setBounds(93, 192, 115, 115);
+		
 		shipList.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent event) {
 				if (event.getSource() == shipList
 						&& !event.getValueIsAdjusting()) {
-					String stringValue = (String) shipList.getSelectedValue();
-					if (stringValue != null)
-						shipName = stringValue;
+					ShipType someType = shipList.getSelectedValue();
+					if (someType != null)
+						currentShip = selectShip(someType);
 				}
 
 			}
 
 		});
+		
 		shipList.setListData(shipsListArray);
 		shipList.setSelectedIndex(0);
 
@@ -796,10 +859,10 @@ public class Player {
 			public void valueChanged(ListSelectionEvent event) {
 				if (event.getSource() == directionList
 						&& !event.getValueIsAdjusting()) {
-					String stringValue = (String) directionList
+					ShipDirection directionValue = directionList
 							.getSelectedValue();
-					if (stringValue != null)
-						shipDirection = stringValue;
+					if (directionValue != null)
+						shipDirection = directionValue;
 				}
 
 			}
@@ -894,9 +957,31 @@ public class Player {
 		return false;
 	}
 
+	
+	/**
+	 * Helper method to migrate old code of using strings to newer code using enums.
+	 * Was created in mind to be eventually deprecated in favor of more elegant solutions.
+	 * @param someShipType the type to test
+	 * @return the player's ship which matches the type
+	 */
+	private Ship selectShip(ShipType someShipType) {
+		
+		Ship returnShip = null;
+		
+		for (Ship shipElement : playerShips) {
+			if (shipElement.getType() == someShipType) {
+				returnShip = shipElement;
+			}
+		}
+		
+		return returnShip;
+	
+	}
+	
 	// Finds what ship is being hit
 	private void findShip(int x, int y) throws IOException {
 
+		// TODO: needs to be cleaned up to incorporate enums
 		if (isRange(opponent.cpuShips[0], x, y)) {
 			opponent.cpuShips[0].addHits();
 			if (opponent.cpuShips[0].sunk()) {
@@ -937,11 +1022,11 @@ public class Player {
 
 	// When a ship is sunk this adds the black over ship
 	private void fillSunk(Ship ship) throws IOException {
-		if (ship.getDirectionOfShip().equals("Vertical")) {
+		if (ship.getDirectionOfShip() == ShipDirection.VERTICAL) {
 			for (int i = 0; i < ship.getSize(); i++) {
 				fireGUI("sunk", (ship.getX() + 1), (ship.getY() + i + 1));
 			}
-		} else if (ship.getDirectionOfShip().equals("Horizontal")) {
+		} else if (ship.getDirectionOfShip() == ShipDirection.HORIZONTAL) {
 			for (int i = 0; i < ship.getSize(); i++) {
 				fireGUI("sunk", (ship.getX() + i + 1), (ship.getY() + 1));
 			}
@@ -1044,11 +1129,13 @@ public class Player {
 
 	// Ship placement for CPU
 	public void cpuShips() {
-		int count = 0;
-		for (int size : BATTLESHIP_SIZES) {
-			while (!computeraddShip(size, count))
-				;
-			count++;
+		ShipFactory cpuFactory = new ShipFactory();
+		cpuShips = cpuFactory.getShipArray();
+		
+		for (ShipType shipTypes : SHIP_TYPES) {
+			while (!computeraddShip(shipTypes)) {
+				continue;
+			}
 		}
 	}
 
@@ -1067,25 +1154,40 @@ public class Player {
 	}
 
 	// Adding ships to the board
-	public boolean computeraddShip(int length, int count) {
+	public boolean computeraddShip(ShipType someType) {
 
+		Ship someShip = null;
+		
+		for (Ship shipElement : cpuShips) {
+			if (shipElement.getType() == someType) {
+				someShip = shipElement;
+			}
+		}
+		
+		//TODO: this is sloppy, change it to be more elegant
+		if (someShip == null) {
+			return false;
+		}
+		
 		// Generate two random coordinates between 1 and 10, one limited by
 		// battleship length
-		int x = random.nextInt(10 - length);
+		int x = random.nextInt(10 - someType.getLength());
 		int y = random.nextInt(10);
 		int d = random.nextInt(2);
 		// Randomly choose horizontal or vertical
 		if (d == 1) {
-			if (x + length < 10) {
+			if (x + someType.getLength() < 10) {
 
-				for (int i = 0; i < length; i++) {
+				for (int i = 0; i < someType.getLength(); i++) {
 					if (board[x + i][y] == 1) {
 						return false;
 					}
 				}
-				cpuShips[count] = new Ship(cpuShipNames[count], "Horizontal",
-						length, x, y);
-				for (int i = 0; i < length; i++) {
+				someShip.setDirectionOfShip(ShipDirection.HORIZONTAL);
+				someShip.setX(x);
+				someShip.setY(y);
+				
+				for (int i = 0; i < someType.getLength(); i++) {
 					board[x + i][y] = 1;
 				}
 				return true;
@@ -1093,15 +1195,17 @@ public class Player {
 		}
 
 		else if (d == 0) {
-			if (y + length < 10) {
-				for (int i = 0; i < length; i++) {
+			if (y + someType.getLength() < 10) {
+				for (int i = 0; i < someType.getLength(); i++) {
 					if (board[x][y + i] == 1) {
 						return false;
 					}
 				}
-				cpuShips[count] = new Ship(cpuShipNames[count], "Vertical",
-						length, x, y);
-				for (int i = 0; i < length; i++) {
+				someShip.setDirectionOfShip(ShipDirection.VERTICAL);
+				someShip.setX(x);
+				someShip.setY(y);
+				
+				for (int i = 0; i < someType.getLength(); i++) {
 					board[x][y + i] = 1;
 				}
 				return true;
@@ -1112,10 +1216,10 @@ public class Player {
 
 	// Makes a count of the number of hits each ship has
 	private boolean sameShip(int x, int y) throws IOException {
-		if (isRange(opponent.aircraftCarrier, x, y)) {
-			opponent.aircraftCarrier.addHits();
-			if (opponent.aircraftCarrier.sunk()) {
-				cpuFillSunk(opponent.aircraftCarrier);
+		if (isRange(opponent.myAircraftCarrier, x, y)) {
+			opponent.myAircraftCarrier.addHits();
+			if (opponent.myAircraftCarrier.sunk()) {
+				cpuFillSunk(opponent.myAircraftCarrier);
 				resetCpu();
 				JOptionPane.showMessageDialog(sunkFrame,
 						"Your Aircraft Carrier was sunk");
@@ -1125,10 +1229,10 @@ public class Player {
 			}
 			lastShip = "ac";
 			return false;
-		} else if (isRange(opponent.battleship, x, y)) {
-			opponent.battleship.addHits();
-			if (opponent.battleship.sunk()) {
-				cpuFillSunk(opponent.battleship);
+		} else if (isRange(opponent.myBattleship, x, y)) {
+			opponent.myBattleship.addHits();
+			if (opponent.myBattleship.sunk()) {
+				cpuFillSunk(opponent.myBattleship);
 				resetCpu();
 				JOptionPane.showMessageDialog(sunkFrame,
 						"Your Battleship was sunk");
@@ -1138,10 +1242,10 @@ public class Player {
 			}
 			lastShip = "bs";
 			return false;
-		} else if (isRange(opponent.destroyer, x, y)) {
-			opponent.destroyer.addHits();
-			if (opponent.destroyer.sunk()) {
-				cpuFillSunk(opponent.destroyer);
+		} else if (isRange(opponent.myDestroyer, x, y)) {
+			opponent.myDestroyer.addHits();
+			if (opponent.myDestroyer.sunk()) {
+				cpuFillSunk(opponent.myDestroyer);
 				resetCpu();
 				JOptionPane.showMessageDialog(sunkFrame,
 						"Your Destroyer was sunk");
@@ -1151,10 +1255,10 @@ public class Player {
 			}
 			lastShip = "ds";
 			return false;
-		} else if (isRange(opponent.submarine, x, y)) {
-			opponent.submarine.addHits();
-			if (opponent.submarine.sunk()) {
-				cpuFillSunk(opponent.submarine);
+		} else if (isRange(opponent.mySubmarine, x, y)) {
+			opponent.mySubmarine.addHits();
+			if (opponent.mySubmarine.sunk()) {
+				cpuFillSunk(opponent.mySubmarine);
 				resetCpu();
 				JOptionPane.showMessageDialog(sunkFrame,
 						"Your Submarine was sunk");
@@ -1164,10 +1268,10 @@ public class Player {
 			}
 			lastShip = "sb";
 			return false;
-		} else if (isRange(opponent.patrolBoat, x, y)) {
-			opponent.patrolBoat.addHits();
-			if (opponent.patrolBoat.sunk()) {
-				cpuFillSunk(opponent.patrolBoat);
+		} else if (isRange(opponent.myPatrolBoat, x, y)) {
+			opponent.myPatrolBoat.addHits();
+			if (opponent.myPatrolBoat.sunk()) {
+				cpuFillSunk(opponent.myPatrolBoat);
 				resetCpu();
 				JOptionPane.showMessageDialog(sunkFrame,
 						"Your Patrol Boat was sunk");
@@ -1183,12 +1287,12 @@ public class Player {
 
 	// Fills a ship with black when the cpu sinks it
 	private void cpuFillSunk(Ship ship) throws IOException {
-		if (ship.getDirectionOfShip().equals("Vertical")) {
+		if (ship.getDirectionOfShip() == ShipDirection.VERTICAL) {
 			for (int i = 0; i < ship.getSize(); i++) {
 				opponent.fireGUI("cpuSunk", (ship.getX() + 1),
 						(ship.getY() + i + 1));
 			}
-		} else if (ship.getDirectionOfShip().equals("Horizontal")) {
+		} else if (ship.getDirectionOfShip() == ShipDirection.HORIZONTAL) {
 			for (int i = 0; i < ship.getSize(); i++) {
 				opponent.fireGUI("cpuSunk", (ship.getX() + i + 1),
 						(ship.getY() + 1));
