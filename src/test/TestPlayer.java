@@ -70,8 +70,19 @@ public class TestPlayer {
 	}
 	
 	@Test
-	public void testValidPlace() {
+	public void testGetGrid() {
+		int gridPosition = 1;
 		
+		// Test valid grid positions
+		for(int i = 45; i < 495; i = i + 45) {
+			assertEquals(player1.getGrid(i), gridPosition);
+			gridPosition++;
+		}
+		
+		// Test invalid positions above and below grid
+		assertEquals(player1.getGrid(600), 0);
+		
+		assertEquals(player1.getGrid(0), 0);
 	}
 
 }
