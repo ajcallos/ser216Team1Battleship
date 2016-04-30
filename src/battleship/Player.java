@@ -224,46 +224,46 @@ public class Player {
 	// find if the ship will be off the board 
 	public boolean validPlace(int x, int y) {
 		if (currentShip.getType() == ShipType.AIRCRAFT_CARRIER) {
-			if (shipDirection.equals("Vertical") && y <= 6) {
+			if (shipDirection == ShipDirection.VERTICAL && y <= 6 && y >= 1) {
 				return true;
 			}
-			if (shipDirection.equals("Horizontal") && x <= 6) {
+			if (shipDirection == ShipDirection.HORIZONTAL && x <= 6 && x >= 1) {
 				return true;
 			}
 		}
 
 		if (currentShip.getType() == ShipType.BATTLESHIP) {
-			if (shipDirection.equals("Vertical") && y <= 7) {
+			if (shipDirection == ShipDirection.VERTICAL && y <= 7 && y >= 1) {
 				return true;
 			}
-			if (shipDirection.equals("Horizontal") && x <= 7) {
+			if (shipDirection == ShipDirection.HORIZONTAL && x <= 7 && x >= 1) {
 				return true;
 			}
 		}
 
 		if (currentShip.getType() == ShipType.SUBMARINE) {
-			if (shipDirection.equals("Vertical") && y <= 8) {
+			if (shipDirection == ShipDirection.VERTICAL && y <= 8 && y >= 1) {
 				return true;
 			}
-			if (shipDirection.equals("Horizontal") && x <= 8) {
+			if (shipDirection == ShipDirection.HORIZONTAL && x <= 8 && x >= 1) {
 				return true;
 			}
 		}
 
 		if (currentShip.getType() == ShipType.DESTROYER) {
-			if (shipDirection.equals("Vertical") && y <= 8) {
+			if (shipDirection == ShipDirection.VERTICAL && y <= 8 && y >= 1) {
 				return true;
 			}
-			if (shipDirection.equals("Horizontal") && x <= 8) {
+			if (shipDirection == ShipDirection.HORIZONTAL && x <= 8 && x >= 1) {
 				return true;
 			}
 		}
 
 		if (currentShip.getType() == ShipType.PATROL_BOAT) {
-			if (shipDirection.equals("Vertical") && y <= 9) {
+			if (shipDirection == ShipDirection.VERTICAL && y <= 9 && y >= 1) {
 				return true;
 			}
-			if (shipDirection.equals("Horizontal") && x <= 9) {
+			if (shipDirection == ShipDirection.HORIZONTAL && x <= 9 && x >= 1) {
 				return true;
 			}
 		}
