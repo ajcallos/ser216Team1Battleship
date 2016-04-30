@@ -136,6 +136,10 @@ public class Player {
 		playerShips = myShipFactory.getShipArray();
 		
 	}
+	
+	private JList<ShipType> getShipList() {
+		return shipList;
+	}
 
 	// Figures out if the ship is where you fired
 	public boolean isRange(Ship ship, int x, int y) {
