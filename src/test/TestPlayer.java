@@ -10,7 +10,6 @@ import battleship.Player;
 import ship.ShipFactory;
 
 import ship.Ship;
-import ship.ShipDirection;
 
 public class TestPlayer {
 	Player player1;
@@ -85,24 +84,5 @@ public class TestPlayer {
 		
 		assertEquals(player1.getGrid(0), 0);
 	}
-	
-	@Test
-	public void testValidPlace() throws Exception {
-		Player placePlayer = new Player("player_test");
-		Ship[] testShips = new ShipFactory().getShipArray();
-		
-		for (Ship ship : testShips) {
-			placePlayer.setCurrentShip(ship);
-			
-			placePlayer.setShipDirection(ShipDirection.HORIZONTAL);
-			assertEquals(placePlayer.validPlace(0, 0), false);
-			assertEquals(placePlayer.validPlace(4, 4), true);
-			assertEquals(placePlayer.validPlace(10, 10), false);
-			
-			placePlayer.setShipDirection(ShipDirection.VERTICAL);
-			assertEquals(placePlayer.validPlace(0, 0), false);
-			assertEquals(placePlayer.validPlace(4, 4), true);
-			assertEquals(placePlayer.validPlace(10, 10), false);
-		}
-	}
+
 }
