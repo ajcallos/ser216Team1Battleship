@@ -6,84 +6,81 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import battleship.Ship;
+import ship.Ship;
+import ship.ShipDirection;
+import ship.ShipType;
+import ship.ShipFactory;
 
 public class TestShip {
-
-	public static final String HORIZONTAL_DIRECTION = "Horizontal";
-	public static final String VERTICAL_DIRECTION = "Vertical";
 	
-	public static final String AIRCRAFT_CARRIER = "Aircraft Carrier";
-	public static final String BATTLESHIP = "Battleship";
-	public static final String SUBMARINE = "Submarine";
-	public static final String DESTROYER = "Destroyer";
-	public static final String PATROL_BOAT = "Patrol Boat";
+	private Ship[] testShips = null;
+	private ShipFactory testFactory = null;
 	
-	private Ship testShip = null;
+	private final int[] arrayTestCases = {
+			-1, 0, 5, 11, 10, 9, 5
+	};
+	
 	
 	@Before
 	public void setUp() throws Exception {
-		testShip = new Ship(AIRCRAFT_CARRIER, HORIZONTAL_DIRECTION, 0, 0, 0);
+		testShips = testFactory.getShipArray();
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		testShip = null;
+		testShips = null;
 	}
 
 	@Test
-	public void testShip() {
-		new Ship(AIRCRAFT_CARRIER, HORIZONTAL_DIRECTION, 0, 0, 0);
-		new Ship(BATTLESHIP, HORIZONTAL_DIRECTION, 0, 0, 0);
-		new Ship();
+	public void testSetX() {
+		for (int i = 0; i < arrayTestCases.length; i++){
+			int x = arrayTestCases[i];
+			for (Ship shipElement : testShips) {
+				shipElement.setX(x);
+				assertTrue(shipElement.getX() == x);
+			}
+		}
 	}
+	
+	@Test
+	public void testSetY() {
+		for (int i = 0; i < arrayTestCases.length; i++) {
+			int y = arrayTestCases[i];
+			for (Ship shipElement : testShips) {
+				shipElement.setY(y);
+				assertTrue(shipElement.getY() == y);
+			}
+		}
+	}
+	
 	
 	@Test
 	public void testShipReset() {
-		testShip.shipReset();
-	}
-	
-	@Test
-	public void testPrintShips() {
-		testShip.printShips();
+
 	}
 	
 	@Test
 	public void testSunk() {
-		
-		Ship testHitsShip = new Ship(SUBMARINE, HORIZONTAL_DIRECTION, 1, 0, 0);
-		
-		assertTrue(testShip.sunk());
-		assertTrue(!testHitsShip.sunk());
+
 	}
 	
 	@Test
 	public void testGetName() {
-		Ship testGetNameShip = new Ship(SUBMARINE, HORIZONTAL_DIRECTION, 1, 0, 0);
 		
-		assertTrue(testGetNameShip.getName().equals(SUBMARINE));
-		assertTrue(testShip.getName().equals(AIRCRAFT_CARRIER));
-		assertTrue(new Ship().getName().equals(null)); // TODO: fix Ship.java
 	}
 	
 	@Test
 	public void testSetName() {
-		Ship testSetNameShip = new Ship();
 		
-		testSetNameShip.setName(SUBMARINE);
-		assertTrue(testSetNameShip.getName().equals(SUBMARINE));
-		testSetNameShip.setName(null);
-		assertTrue(testSetNameShip.getName().equals(null));
 	}
 	
 	@Test
 	public void testGetDirectionOfShip() {
-		assertTrue(testShip.getDirectionOfShip().equals(HORIZONTAL_DIRECTION));
+		
 	}
 	
 	@Test
 	public void testSetDirectionOfShip() {
-		testShip.setDirectionOfShip(VERTICAL_DIRECTION);
-		assertTrue(testShip.getDirectionOfShip().equals(VERTICAL_DIRECTION));
+		
 	}
 }

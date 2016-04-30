@@ -8,7 +8,6 @@ public abstract class Ship {
 	protected ShipDirection myDirection;
 	protected int x;
 	protected int y;
-	protected int size;
 	protected int hits;
 	
 	public final static ShipDirection DEFAULT_DIRECTION = ShipDirection.HORIZONTAL; 
@@ -17,8 +16,8 @@ public abstract class Ship {
 	public final static int INITIAL_Y = 0;
 	
 	public void shipReset() {
-		x = 0;
-		y = 0;
+		this.x = INITIAL_X;
+		this.y = INITIAL_Y;
 		myDirection = DEFAULT_DIRECTION;
 	}
 
@@ -29,7 +28,7 @@ public abstract class Ship {
 	}
 
 	public boolean sunk() {
-		return hits >= size;
+		return hits >= this.myType.getLength();
 	}
 
 	public ShipType getType() {
@@ -58,14 +57,6 @@ public abstract class Ship {
 
 	public void setY(int y) {
 		this.y = y;
-	}
-
-	public int getSize() {
-		return size;
-	}
-
-	public void setSize(int size) {
-		this.size = size;
 	}
 
 	public int getHits() {
