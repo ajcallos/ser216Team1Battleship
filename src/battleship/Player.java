@@ -775,11 +775,11 @@ public class Player {
 		// Loads the board image and sets size
 		final JLabel board_img = (new JLabel(new ImageIcon(
 				ImageIO.read(new File("src/res/img/board.gif")))));
-		board_img.setBounds(0, 0, 500, 500);
+		board_img.setBounds(0, 0, 495, 500);
 		// Makes a second board
 		final JLabel board_img1 = (new JLabel(new ImageIcon(
 				ImageIO.read(new File("src/res/img/board.gif")))));
-		board_img1.setBounds(0, 0, 500, 500);
+		board_img1.setBounds(0, 0, 495, 500);
 
 		// Loads the board image and sets size
 		JLabel img_1L = (new JLabel(new ImageIcon(ImageIO.read(file_1L))));
