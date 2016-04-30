@@ -178,7 +178,6 @@ public class Player {
 
 	// find if the ship will be off the board 
 	public boolean validPlace(int x, int y) {
-		
 		if (currentShip.getDirectionOfShip() == ShipDirection.VERTICAL) {
 			if (y <= BOARD_MAX - currentShip.getType().getLength()) {
 				return true;
