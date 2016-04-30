@@ -33,11 +33,13 @@ public class Player {
 			ShipType.BATTLESHIP, ShipType.AIRCRAFT_CARRIER
 	};
 	
+	private final int BOARD_MAX = 10;
+	
 	private int hits = 0;
 	@SuppressWarnings("unused")
 	private static int misses = 0;
-	private int[][] board = new int[10][10];
-	private int[][] gameBoard = new int[10][10];
+	private int[][] board = new int[BOARD_MAX][BOARD_MAX];
+	private int[][] gameBoard = new int[BOARD_MAX][BOARD_MAX];
 	private boolean[] shipPlace = new boolean[5];
 	private boolean turn = true;
 
@@ -278,91 +280,21 @@ public class Player {
 
 	// Looks to see if you can put the ship down
 	public boolean freeBoard(int x, int y){
-		if (currentShip.getType() == ShipType.AIRCRAFT_CARRIER) {
-			if (shipDirection == ShipDirection.VERTICAL) {
-				for (int i = 0; i < 5; i++) {
-					if(board[(x - 1)][i + y - 1] == 1){
-						return false;
-					}
-				}
-			}
-			if (shipDirection == ShipDirection.HORIZONTAL) {
-				for (int i = 0; i < 5; i++) {
-					if(board[(i + x - 1)][y - 1] == 1){
-						return false;
-					}
+		if (shipDirection == ShipDirection.VERTICAL) {
+			for (int i = 0; i < currentShip.getType().getLength(); i++) {
+				if (i + y -1 >= BOARD_MAX || board[x - 1][i + y - 1] == 1) {
+					return false;
 				}
 			}
 		}
 		
-		if (currentShip.getType() == ShipType.BATTLESHIP) {
-			if (shipDirection == ShipDirection.VERTICAL) {
-				for (int i = 0; i < 4; i++) {
-					if(board[(x - 1)][i + y - 1] == 1){
-						return false;
-					}
-				}
-			}
-			if (shipDirection == ShipDirection.HORIZONTAL) {
-				for (int i = 0; i < 4; i++) {
-					if(board[(i + x - 1)][y - 1] == 1){
-						return false;
-					}
+		if (shipDirection == ShipDirection.HORIZONTAL) {
+			for (int i = 0; i < currentShip.getType().getLength(); i++) {
+				if (i + x - 1 >= BOARD_MAX || board[i + x - 1][y - 1] == 1) {
+					return false;
 				}
 			}
 		}
-
-		if (currentShip.getType() == ShipType.SUBMARINE) {
-			if (shipDirection == ShipDirection.VERTICAL) {
-				for (int i = 0; i < 3; i++) {
-					if(board[(x - 1)][i + y - 1] == 1){
-						return false;
-					}
-				}
-			}
-			if (shipDirection == ShipDirection.HORIZONTAL) {
-				for (int i = 0; i < 3; i++) {
-					if(board[(i + x - 1)][y - 1] == 1){
-						return false;
-					}
-				}
-			}
-		}
-
-		if (currentShip.getType() == ShipType.DESTROYER) {
-			if (shipDirection == ShipDirection.VERTICAL) {
-				for (int i = 0; i < 3; i++) {
-					if(board[(x - 1)][i + y - 1] == 1){
-						return false;
-					}
-				}
-			}
-			if (shipDirection == ShipDirection.HORIZONTAL) {
-				for (int i = 0; i < 3; i++) {
-					if(board[(i + x - 1)][y - 1] == 1){
-						return false;
-					}
-				}
-			}
-		}
-
-		if (currentShip.getType() == ShipType.PATROL_BOAT) {
-			if (shipDirection == ShipDirection.VERTICAL) {
-				for (int i = 0; i < 2; i++) {
-					if(board[(x - 1)][i + y - 1] == 1){
-						return false;
-					}
-				}
-			}
-			if (shipDirection == ShipDirection.HORIZONTAL) {
-				for (int i = 0; i < 2; i++) {
-					if(board[(i + x - 1)][y - 1] == 1){
-						return false;
-					}
-				}
-			}
-		}
-		
 		return true;
 	}
 
