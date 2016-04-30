@@ -20,9 +20,13 @@ public class TestShip {
 			-1, 0, 5, 11, 10, 9, 5
 	};
 	
+	private final ShipDirection[] shipDirections = {
+			ShipDirection.HORIZONTAL, ShipDirection.VERTICAL
+	};
 	
 	@Before
 	public void setUp() throws Exception {
+		testFactory = new ShipFactory();
 		testShips = testFactory.getShipArray();
 	}
 
@@ -56,31 +60,43 @@ public class TestShip {
 	
 	@Test
 	public void testShipReset() {
-
+		final int TESTX = 5;
+		final int TESTY = 10;
+		
+		testShips[0].setX(TESTX);
+		testShips[0].setY(TESTY);
+		testShips[0].setDirectionOfShip(ShipDirection.VERTICAL);
+		
+		testShips[0].shipReset();
+		
+		assertTrue(testShips[0].getX() == 0);
+		assertTrue(testShips[0].getY() == 0);
+		assertTrue(testShips[0].getDirectionOfShip() == ShipDirection.HORIZONTAL);
 	}
 	
 	@Test
 	public void testSunk() {
-
-	}
-	
-	@Test
-	public void testGetName() {
-		
-	}
-	
-	@Test
-	public void testSetName() {
-		
+		final int MAX_HITS = 5;
+		for (int i = 0; i <= MAX_HITS; i++) {
+			for (Ship shipElement : testShips) {
+				shipElement.setHits(i);
+				if (i < shipElement.getType().getLength()) {
+					assertTrue(!shipElement.sunk());
+				} else {
+					assertTrue(shipElement.sunk());
+				}
+			}
+			
+		}
 	}
 	
 	@Test
 	public void testGetDirectionOfShip() {
-		
-	}
-	
-	@Test
-	public void testSetDirectionOfShip() {
-		
+		for (ShipDirection direction : shipDirections) {
+			for (Ship shipElement : testShips) {
+				shipElement.setDirectionOfShip(direction);
+				assertTrue(shipElement.getDirectionOfShip() == direction);
+			}
+		}
 	}
 }
