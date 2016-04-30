@@ -25,7 +25,7 @@ public class BackgroundMusic {
 	
 		
 	
-	public BackgroundMusic(String playThisTrack) {
+	public BackgroundMusic(String playThisTrack) throws Exception {
 		this.currentTrack = BGM_DIRECTORY + playThisTrack;
 		myAudioInputStream = null;
 		
@@ -51,12 +51,12 @@ public class BackgroundMusic {
 		
 	}
 	
-	public void play() {
+	public void play() throws Exception {
 		myClip.loop(myClip.LOOP_CONTINUOUSLY);
 		myClip.start();
 	}
 	
-	public void close() {
+	public void close() throws Exception {
 		myClip.stop();
 		myClip.close();
 		try {

@@ -147,14 +147,14 @@ public class Player {
 	public boolean isRange(Ship ship, int x, int y) {
 		if (ship.getDirectionOfShip() == ShipDirection.VERTICAL) {
 			if (ship.getX() == x) {
-				if (ship.getY() <= y && y <= (ship.getY() + ship.getSize())) {
+				if (ship.getY() <= y && y <= ship.getY() + ship.getType().getLength()) {
 					return true;
 				}
 			}
 		}
 		if (ship.getDirectionOfShip() == ShipDirection.HORIZONTAL) {
 			if (ship.getY() == y) {
-				if (ship.getX() <= x && x <= (ship.getX() + ship.getSize())) {
+				if (ship.getX() <= x && x <= ship.getX() + ship.getType().getLength()) {
 					return true;
 				}
 			}
@@ -178,7 +178,6 @@ public class Player {
 
 	// find if the ship will be off the board 
 	public boolean validPlace(int x, int y) {
-		
 		if (currentShip.getDirectionOfShip() == ShipDirection.VERTICAL) {
 			if (y <= BOARD_MAX - currentShip.getType().getLength()) {
 				return true;
@@ -340,7 +339,7 @@ public class Player {
 			return 8;
 		} else if (x >= 405 && x < 450) {
 			return 9;
-		} else if (x >= 450 && x < 500) {
+		} else if (x >= 450 && x < 495) {
 			return 10;
 		} else
 			return 0;
@@ -533,11 +532,11 @@ public class Player {
 		// Loads the board image and sets size
 		final JLabel board_img = (new JLabel(new ImageIcon(
 				ImageIO.read(new File("src/res/img/board.gif")))));
-		board_img.setBounds(0, 0, 500, 500);
+		board_img.setBounds(0, 0, 495, 500);
 		// Makes a second board
 		final JLabel board_img1 = (new JLabel(new ImageIcon(
 				ImageIO.read(new File("src/res/img/board.gif")))));
-		board_img1.setBounds(0, 0, 500, 500);
+		board_img1.setBounds(0, 0, 495, 500);
 
 		// Loads the board image and sets size
 		JLabel img_1L = (new JLabel(new ImageIcon(ImageIO.read(file_1L))));
@@ -781,11 +780,11 @@ public class Player {
 	// When a ship is sunk this adds the black over ship
 	private void fillSunk(Ship ship) throws IOException {
 		if (ship.getDirectionOfShip() == ShipDirection.VERTICAL) {
-			for (int i = 0; i < ship.getSize(); i++) {
+			for (int i = 0; i < ship.getType().getLength(); i++) {
 				fireGUI("sunk", (ship.getX() + 1), (ship.getY() + i + 1));
 			}
 		} else if (ship.getDirectionOfShip() == ShipDirection.HORIZONTAL) {
-			for (int i = 0; i < ship.getSize(); i++) {
+			for (int i = 0; i < ship.getType().getLength(); i++) {
 				fireGUI("sunk", (ship.getX() + i + 1), (ship.getY() + 1));
 			}
 		}
@@ -866,16 +865,16 @@ public class Player {
 	private void showComputerShips() throws IOException {
 		for (int j = 0; j < 5; j++) {
 			if (opponent.cpuShips[j].getHits() != opponent.cpuShips[j]
-					.getSize()) {
+					.getType().getLength()) {
 				if (opponent.cpuShips[j].getDirectionOfShip()
 						.equals("Vertical")) {
-					for (int i = 0; i < opponent.cpuShips[j].getSize(); i++) {
+					for (int i = 0; i < opponent.cpuShips[j].getType().getLength(); i++) {
 						fireGUI("cpuShow", (opponent.cpuShips[j].getX() + 1),
 								(opponent.cpuShips[j].getY() + i + 1));
 					}
 				} else if (opponent.cpuShips[j].getDirectionOfShip().equals(
 						"Horizontal")) {
-					for (int i = 0; i < opponent.cpuShips[j].getSize(); i++) {
+					for (int i = 0; i < opponent.cpuShips[j].getType().getLength(); i++) {
 						fireGUI("cpuShow",
 								(opponent.cpuShips[j].getX() + i + 1),
 								(opponent.cpuShips[j].getY() + 1));
@@ -1046,12 +1045,12 @@ public class Player {
 	// Fills a ship with black when the cpu sinks it
 	private void cpuFillSunk(Ship ship) throws IOException {
 		if (ship.getDirectionOfShip() == ShipDirection.VERTICAL) {
-			for (int i = 0; i < ship.getSize(); i++) {
+			for (int i = 0; i < ship.getType().getLength(); i++) {
 				opponent.fireGUI("cpuSunk", (ship.getX() + 1),
 						(ship.getY() + i + 1));
 			}
 		} else if (ship.getDirectionOfShip() == ShipDirection.HORIZONTAL) {
-			for (int i = 0; i < ship.getSize(); i++) {
+			for (int i = 0; i < ship.getType().getLength(); i++) {
 				opponent.fireGUI("cpuSunk", (ship.getX() + i + 1),
 						(ship.getY() + 1));
 			}
@@ -1261,7 +1260,6 @@ public class Player {
 	
 	// Classes-----------------------------------------------------------------
 	
-	// Holds the values for the ships
 	public class setupMouseListener implements MouseListener {
 		public void mouseClicked(MouseEvent e) {
 			int x = getGrid(e.getX());
@@ -1334,6 +1332,14 @@ public class Player {
 		public void mouseReleased(MouseEvent arg0) {
 		}
 
+	}
+	
+	public void setCurrentShip(Ship ship) {
+		this.currentShip = ship;
+	}
+	
+	public void setShipDirection(ShipDirection direction) {
+		this.shipDirection = direction;
 	}
 
 }

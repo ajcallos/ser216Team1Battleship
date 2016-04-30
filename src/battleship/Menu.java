@@ -30,8 +30,18 @@ public class Menu {
 	Menu() throws IOException {
 		windowGUI(mainFrame, mainPanel);
 		mainButtons();
-		myMusicPlayer = new BackgroundMusic(BACKGROUND_MUSIC_TRACK);
-		myMusicPlayer.play();
+		try {
+			myMusicPlayer = new BackgroundMusic(BACKGROUND_MUSIC_TRACK);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		
+		try {
+			myMusicPlayer.play();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		
 	}
 
 	// Makes the window the Menu appears in
@@ -77,7 +87,12 @@ public class Menu {
 
 		exitButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				myMusicPlayer.close();
+				
+				try {
+					myMusicPlayer.close();
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
 				System.exit(0);
 			}
 		});
