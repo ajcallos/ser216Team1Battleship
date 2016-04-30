@@ -340,7 +340,7 @@ public class Player {
 			return 8;
 		} else if (x >= 405 && x < 450) {
 			return 9;
-		} else if (x >= 450 && x < 500) {
+		} else if (x >= 450 && x < 495) {
 			return 10;
 		} else
 			return 0;
