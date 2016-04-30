@@ -1335,5 +1335,13 @@ public class Player {
 		}
 
 	}
+	
+	public void setCurrentShip(Ship ship) {
+		this.currentShip = ship;
+	}
+	
+	public void setShipDirection(ShipDirection direction) {
+		this.shipDirection = direction;
+	}
 
 }
